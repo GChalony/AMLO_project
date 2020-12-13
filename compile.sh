@@ -1,1 +1,1 @@
-gcc main.c -lm
+gcc -Wall main.c -lm && echo "Compiled!"
