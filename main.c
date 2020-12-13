@@ -3,7 +3,7 @@
 #include <math.h>
 #include <time.h>
 
-#define N 1000000
+#define N 10000000
 
 void init(float *a, int n){
 	for (int i=0; i<n; i++){
@@ -22,7 +22,7 @@ float naive(float *a, int n){
 int main(){
 	// init random
 	srand((unsigned int)time(NULL));
-	float array[N];
+	static float array[N];
 
 	init(array, N);
 
