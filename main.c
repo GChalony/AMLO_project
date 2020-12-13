@@ -87,7 +87,7 @@ float multiThreaded(float *a, int n, int n_threads){
 int main(){
 	// init random
 	srand((unsigned int)time(NULL));
-	static float array[N];
+	float *array = malloc(N * sizeof(float));
 
 	init(array, N);
 
