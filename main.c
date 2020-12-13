@@ -5,7 +5,7 @@
 #include <immintrin.h>
 
 
-#define N 10000000
+#define N 16000
 
 void init(float *a, int n){
 	for (int i=0; i<n; i++){
@@ -24,16 +24,23 @@ float naive(float *a, int n){
 float vect_norm(float *U, int n){
     unsigned int i;
     __m256 *mm_U = (__m256 *)U;
-    __m256 *res;
+    __m256 res = _mm256_setzero_ps() ;
     for( i = 0; i <n/8; i++) {
-    res[i] = _mm256_sqrt_ps(_mm256_max_ps(mm_U[i], _mm256_sub_ps(_mm256_setzero_ps(),mm_U[i])));
+        res = _mm256_add_ps(res,_mm256_sqrt_ps(_mm256_max_ps(mm_U[i], _mm256_sub_ps(_mm256_setzero_ps(),mm_U[i]))));
     }
+    float resultat = 0;
+    float *final = (float *) &res;
+    for (int j =0; j < 8; j++) {
+        resultat += final[j];
+    };
+    return resultat;
 }
 
 int main(){
 	// init random
 	srand((unsigned int)time(NULL));
-	static float array[N];
+	float array[N] __attribute__((aligned(64)));
+
 
 	init(array, N);
 
@@ -43,7 +50,20 @@ int main(){
 
 	clock_t end = clock();
 
-	printf("Array of size %d\nTook %f seconds\nResult = %f\n", N, (end - start)/(double)CLOCKS_PER_SEC, res);
+	float time_naive =  (end - start)/(double)CLOCKS_PER_SEC;
+	printf("Array of size %d\nTook %f seconds\nResult = %f\n", N, time_naive, res);
+
+	start = clock();
+
+	float res2 = vect_norm(array, N);
+
+	end = clock();
+
+	float time_vect =  (end - start)/(double)CLOCKS_PER_SEC;
+
+	printf("Array of size %d\nTook %f seconds when vect\nResult = %f\n", N, time_vect, res2);
+
+	printf("Acceleration = %f \n", time_naive/time_vect);
 
 	return 0;
 }
