@@ -5,7 +5,7 @@
 #include <immintrin.h>
 
 
-#define N 1000000
+#define N 10000000
 
 void init(float *a, int n){
 	for (int i=0; i<n; i++){
@@ -33,7 +33,7 @@ float vect_norm(float *U, int n){
 int main(){
 	// init random
 	srand((unsigned int)time(NULL));
-	float array[N];
+	static float array[N];
 
 	init(array, N);
 
