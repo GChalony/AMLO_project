@@ -2,17 +2,10 @@
 #include <stdlib.h>
 #include <math.h>
 #include <time.h>
-<<<<<<< HEAD
 #include <pthread.h>
 
-
 #define N 100000000
-=======
-#include <immintrin.h>
 
-
-#define N 16000
->>>>>>> 4080ba6afb326d3012b0b5fe295244a321a3875a
 
 void init(float *a, int n){
 	for (int i=0; i<n; i++){
@@ -89,20 +82,6 @@ float multiThreaded(float *a, int n, int n_threads){
 	}
 
 	return res;
-
-float vect_norm(float *U, int n){
-    unsigned int i;
-    __m256 *mm_U = (__m256 *)U;
-    __m256 res = _mm256_setzero_ps() ;
-    for( i = 0; i <n/8; i++) {
-        res = _mm256_add_ps(res,_mm256_sqrt_ps(_mm256_max_ps(mm_U[i], _mm256_sub_ps(_mm256_setzero_ps(),mm_U[i]))));
-    }
-    float resultat = 0;
-    float *final = (float *) &res;
-    for (int j =0; j < 8; j++) {
-        resultat += final[j];
-    };
-    return resultat;
 }
 
 int main(){
