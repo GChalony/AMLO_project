@@ -2,8 +2,15 @@
 #include <stdlib.h>
 #include <math.h>
 #include <time.h>
+#include <immintrin.h>
 
 #define N 1000000
+
+void init(float *a, int n){
+	for (int i=0; i<n; i++){
+		a[i] = ((float)rand()/(float)(RAND_MAX));
+	}
+}
 
 float naive(float *a, int n){
 	float res = 0;
@@ -18,11 +25,13 @@ void main(){
 	srand((unsigned int)time(NULL));
 	float array[N];
 
-	float start = time(NULL);
+	init(array, N);
 
-	naive(array, N);
+	clock_t start = clock();
 
-	float end = time(NULL);
-	printf("Took %f seconds\n", end - start);
+	float res = naive(array, N);
 
+	clock_t end = clock();
+
+	printf("Array of size %d\nTook %f seconds\nResult = %f\n", N, (end - start)/(double)CLOCKS_PER_SEC, res);
 }
