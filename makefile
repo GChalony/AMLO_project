@@ -4,5 +4,5 @@ run: main
 	./main
 
 main: main.c
-	$(CC) -o main vectoriel.c -m -msse2-msse3
+	$(CC) -Wall -lm -o main main.c -avx -avx2
 
