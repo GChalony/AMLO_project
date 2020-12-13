@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #include <math.h>
 #include <time.h>
+#include <immintrin.h>
+
 
 #define N 1000000
 
@@ -17,6 +19,15 @@ float naive(float *a, int n){
 		res += sqrtf(fabsf(a[i]));
 	}
 	return res;
+}
+
+float vect_norm(float *U, int n){
+    unsigned int i;
+    __m256 *mm_U = (__m256 *)U;
+    __m256 *res;
+    for( i = 0; i <n/8; i++) {
+    res[i] = _mm256_sqrt_ps(_mm256_max_ps(mm_U[i], _mm256_sub_ps(_mm256_setzero_ps(),mm_U[i])));
+    }
 }
 
 int main(){

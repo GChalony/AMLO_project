@@ -4,5 +4,5 @@ run: main
 	./main
 
 main: main.c
-	$(CC) -Wall -lm -o main main.c -avx -avx2
+	$(CC) -Wall -mavx -mavx2 -o main main.c -lm
 
