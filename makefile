@@ -4,5 +4,6 @@ run: main
 	./main
 
 main: main.c
-	$(CC) -Wall -lm -o main main.c -avx -avx2
+	$(CC) -Wall -o main main.c -lm -lpthread
+	echo "Compiled!"
 
