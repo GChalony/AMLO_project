@@ -3,7 +3,7 @@
 #include <math.h>
 #include <time.h>
 
-#define N 1000
+#define N 1000000
 
 float naive(float *a, int n){
 	float res = 0;
@@ -18,11 +18,11 @@ void main(){
 	srand((unsigned int)time(NULL));
 	float array[N];
 
-	int start = time(NULL);
+	float start = time(NULL);
 
 	naive(array, N);
 
-	int end = time(NULL);
-	printf("Took %d seconds", end - start);
+	float end = time(NULL);
+	printf("Took %f seconds\n", end - start);
 
 }
