@@ -6,7 +6,6 @@
 #include <sched.h>
 #include <sys/time.h>
 #include <immintrin.h>
-#include <openmp.h>
 
 
 // On a ajouté une boucle interne pour le calcul afin de rendre 
@@ -97,7 +96,7 @@ double openmp(double *a, int n){
 	#pragma omp parallel for reduction(+:res)
 	for (int i=0; i<n; i++){
 		for (int j=0; j<M; j++){
-			res += sqrtf(fabs(a[i]));
+			res += sqrt(fabs(a[i]));
 		}
 	}
 	return res;
