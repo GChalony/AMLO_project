@@ -10,7 +10,7 @@
 int sched_getcpu(void);
 
 #define N 100000000
-#define M 20
+#define M 10
 
 
 double now(){
@@ -21,12 +21,14 @@ double now(){
 }
 
 void init(double *a, int n){
+	// Fill array with random values between 0 and 1
 	for (int i=0; i<n; i++){
 		a[i] = ((double)rand()/(double)(RAND_MAX)) / n;
 	}
 }
 
 double naive(double *a, int n){
+	// Naive for loop
 	double res = 0;
 	for (int i=0; i<n; i++){
 		for (int j=0; j<M; j++){
@@ -47,6 +49,7 @@ double openmp(double *a, int n){
 	return res;
 }
 
+/*    PThread implementation    */
 typedef struct {
 	double *a;  	// Array to compute operation on
 	int n;  		// Number of items in array
@@ -70,7 +73,7 @@ void *runThread(void *args){
 	// Run operation on data provided via ThreadObj argument
 	
 	ThreadObj *obj = (ThreadObj *)args;
-	printf("Thread running on core %d", sched_getcpu());
+	printf("Thread running on core %d\n", sched_getcpu());
 	// describeThreadObj(obj);
 	double res = 0;
 
@@ -113,9 +116,9 @@ double multiThreaded(double *a, int n, int n_threads){
 int main(){
 	// init random
 	srand((unsigned int)time(NULL));
-	double *array = malloc(N * sizeof(double));
-	// double array[N] __attribute__((aligned(64)));
-
+	double *array = NULL;
+	posix_memalign(&array, 64, N * sizeof(double));  // Aligned
+	
 	init(array, N);
 
 	printf("Running naive\n");
