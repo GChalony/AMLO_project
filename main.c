@@ -9,7 +9,7 @@
 
 int sched_getcpu(void);
 
-#define N 100000000
+
 #define M 10
 #include <immintrin.h>
 
@@ -130,24 +130,53 @@ double multiThreaded(double *a, int n, int vect, int n_threads){
 	return res;
 }
 
+typedef struct {
+    int mode;
+    int N;
+    int nb_threads;
+}args_struct;
 
-int main(){
+void parse_args(int argc, char *argv[], args_struct *args) {
+
+    args->nb_threads = 2;
+    args->N = 10000000;
+    args->mode = 0;
+
+    if(argc==2){
+        args->nb_threads = atoi(argv[1]);
+    }
+    else if (argc==3){
+        args->nb_threads = atoi(argv[1]);
+        args->N = atoi(argv[2]);
+    }
+    else if (argc==4){
+        args->nb_threads = atoi(argv[1]);
+        args->N = atoi(argv[2]);
+        args->mode = atoi(argv[3]);
+    }
+}
+
+int main(int argc, char *argv[]){
+    //get arguments
+    args_struct args;
+    parse_args(argc, argv, &args);
+
 	// init random
 	srand((unsigned int)time(NULL));
 	double *array = NULL;
-	posix_memalign((void **) &array, 64, N * sizeof(double));  // Aligned
+	posix_memalign(&array, 64, args.N * sizeof(double));  // Aligned
 	
-	init(array, N);
+	init(array, args.N);
 
 	printf("Running naive\n");
 	double start = now();
-	double res = naive(array, N);
+	double res = naive(array, args.N);
 	double end_naive = now();
 
-//	printf("Running OpenMP\n");
-//	double start_omp = now();
-//	double res_omp = openmp(array, N);
-//	double end_omp = now();
+	printf("Running OpenMP\n");
+	double start_omp = now();
+	double res_omp = openmp(array, args.N);
+	double end_omp = now();
 
 	printf("Running Vectorial\n");
 	double start_vect = now();
@@ -156,7 +185,7 @@ int main(){
 
 	printf("Running MT\n");
 	double start_mt = now();
-	double res_mt = multiThreaded(array, N, 0, 4);
+	double res_mt = multiThreaded(array, args.N, args.nb_threads);
 	double end_mt = now();
 
 	printf("Running VECT + MT\n");
