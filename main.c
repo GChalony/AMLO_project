@@ -67,8 +67,8 @@ double vect_norm1(double *U, int n){
 //	return res;
 //}
 
-/*    PThread implementation    */
 
+/*    PThread implementation    */
 typedef struct {
     int vect;       // Vectorization enabled or not
 	double *a;  	// Array to compute operation on
@@ -135,7 +135,7 @@ int main(){
 	// init random
 	srand((unsigned int)time(NULL));
 	double *array = NULL;
-	posix_memalign(&array, 64, N * sizeof(double));  // Aligned
+	posix_memalign((void **) &array, 64, N * sizeof(double));  // Aligned
 	
 	init(array, N);
 
@@ -166,7 +166,7 @@ int main(){
 
 	printf("Done!\n\n");
 
-	printf("METHOD     \t\tTIME     \tRESULT     \tTime ratio\tError ratio\n");
+	printf("METHOD     \t\tTIME     \tRESULT     \tTIME RATIO\tERROR RATIO\n");
 	printf("NAIVE     \t\t%f s\t%f\t%f%%\t%f%%\n",
 			end_naive - start, 
 			res,
