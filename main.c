@@ -85,11 +85,10 @@ double vectAVX(double *U, int n){
     }
 
     double *final = (double *) &res;
-	double sum=0;
     for (int j =1; j < 4; j++) {
-        sum += final[j];
+        final[0] += final[j];
     };
-    return sum;
+    return final[0];
 }
 
 double openmp(double *a, int n){
@@ -214,19 +213,19 @@ int main(int argc, char *argv[]){
 			100.,
 			0.
 			);
-	printf("OPENMP        \t%f s\t%f\t%f%%\t%f%%\n",
+	printf("OPENMP        \t\t%f s\t%f\t%f%%\t%f%%\n",
 			end_omp - start_omp,
 			res_omp,
 			(end_omp - start_omp) / (end_naive - start) * 100,
 			(res_omp - res) / res * 100
 			);
-	printf("VECTORIAL        \t\t%f s\t%f\t%f%%\t%f%%\n",
+	printf("VECTORIAL        \t%f s\t%f\t%f%%\t%f%%\n",
 			end_vect - start_vect,
 			res_vect,
 			(end_vect - start_vect) / (end_naive - start) * 100,
 			(res_vect - res) / res * 100
 			);
-	printf("MULTITHREAD   \t%f s\t%f\t%f%%\t%f%%\n",
+	printf("MULTITHREAD   \t\t%f s\t%f\t%f%%\t%f%%\n",
 			end_mt - start_mt,
 			res_mt,
 			(end_mt - start_mt) / (end_naive - start) * 100,

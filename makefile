@@ -1,6 +1,6 @@
 CC=gcc
 nb_thread=4
-N=10000000
+N=16000000
 
 run: main
 	@ ./main $(nb_thread) $(N)
