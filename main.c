@@ -12,6 +12,7 @@ int sched_getcpu(void);
 #define N 100000000
 #define M 10
 
+typedef float numeric;
 
 double now(){
 	struct timeval ts;
@@ -20,16 +21,16 @@ double now(){
 	return sum;
 }
 
-void init(double *a, int n){
+void init(numeric *a, int n){
 	// Fill array with random values between 0 and 1
 	for (int i=0; i<n; i++){
-		a[i] = ((double)rand()/(double)(RAND_MAX)) / n;
+		a[i] = ((numeric)rand()/(numeric)(RAND_MAX)) / n;
 	}
 }
 
-double naive(double *a, int n){
+numeric naive(numeric *a, int n){
 	// Naive for loop
-	double res = 0;
+	numeric res = 0;
 	for (int i=0; i<n; i++){
 		for (int j=0; j<M; j++){
 			res += sqrtf(fabsf(a[i]));
@@ -38,8 +39,8 @@ double naive(double *a, int n){
 	return res;
 }
 
-double openmp(double *a, int n){
-	double res = 0;
+numeric openmp(numeric *a, int n){
+	numeric res = 0;
 	#pragma omp parallel for reduction(+:res)
 	for (int i=0; i<n; i++){
 		for (int j=0; j<M; j++){
@@ -51,13 +52,13 @@ double openmp(double *a, int n){
 
 /*    PThread implementation    */
 typedef struct {
-	double *a;  	// Array to compute operation on
+	numeric *a;  	// Array to compute operation on
 	int n;  		// Number of items in array
 	int t;  		// Thread ID
-	double *res;	// Location to store result
+	numeric *res;	// Location to store result
 } ThreadObj;
 
-void instantiateThreadObj(ThreadObj *obj, double *a, int n, int t, double *res){
+void instantiateThreadObj(ThreadObj *obj, numeric *a, int n, int t, numeric *res){
 	// Utils function to fill ThreadObj attributes
 	obj->a = a;
 	obj->n = n;
@@ -75,7 +76,7 @@ void *runThread(void *args){
 	ThreadObj *obj = (ThreadObj *)args;
 	printf("Thread running on core %d\n", sched_getcpu());
 	// describeThreadObj(obj);
-	double res = 0;
+	numeric res = 0;
 
 	for (int i=0; i<obj->n; i++){
 		for (int j=0; j<M; j++){
@@ -87,10 +88,10 @@ void *runThread(void *args){
 	return NULL;
 }
 
-double multiThreaded(double *a, int n, int n_threads){
+numeric multiThreaded(numeric *a, int n, int n_threads){
 	pthread_t *th_id = malloc(n_threads * sizeof(pthread_t));
 	
-	double *resultsPerThread = malloc(n_threads * sizeof(double));
+	numeric *resultsPerThread = malloc(n_threads * sizeof(numeric));
 	int offset=0, m = n / n_threads;  // assumes n multiple of n_threads
 	
 	for (int t=0; t<n_threads; t++){
@@ -104,7 +105,7 @@ double multiThreaded(double *a, int n, int n_threads){
 	
 	printf("\n");
 
-	double res = 0;
+	numeric res = 0;
 	for (int i=0; i<n_threads; i++){
 		pthread_join(th_id[i], NULL);
 		res += resultsPerThread[i];
@@ -116,8 +117,8 @@ double multiThreaded(double *a, int n, int n_threads){
 int main(){
 	// init random
 	srand((unsigned int)time(NULL));
-	double *array = NULL;
-	posix_memalign(&array, 64, N * sizeof(double));  // Aligned
+	numeric *array = NULL;
+	posix_memalign(&array, 64, N * sizeof(numeric));  // Aligned
 	
 	init(array, N);
 
