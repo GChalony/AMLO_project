@@ -6,7 +6,7 @@ run: main
 	@ ./main $(nb_thread) $(N)
 
 main: main.c
-	@ $(CC) -Wall -o main main.c -mavx -mavx2 -pthread -O3
+	@ $(CC) -Wall -o main main.c -mavx -mavx2 -pthread -O1
 	@ echo "Compilation done ! ✅"
 clean:
 	rm main
