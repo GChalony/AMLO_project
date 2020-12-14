@@ -5,7 +5,7 @@
 #include <pthread.h>
 #include <sched.h>
 #include <sys/time.h>
-#include <omp.h>
+//#include <omp.h>
 
 int sched_getcpu(void);
 
@@ -164,7 +164,7 @@ int main(int argc, char *argv[]){
 	// init random
 	srand((unsigned int)time(NULL));
 	double *array = NULL;
-	posix_memalign(&array, 64, args.N * sizeof(double));  // Aligned
+	posix_memalign((void **) &array, 64, args.N * sizeof(double));  // Aligned
 	
 	init(array, args.N);
 
@@ -173,24 +173,24 @@ int main(int argc, char *argv[]){
 	double res = naive(array, args.N);
 	double end_naive = now();
 
-	printf("Running OpenMP\n");
-	double start_omp = now();
-	double res_omp = openmp(array, args.N);
-	double end_omp = now();
+//	printf("Running OpenMP\n");
+//	double start_omp = now();
+//	double res_omp = openmp(array, args.N);
+//	double end_omp = now();
 
 	printf("Running Vectorial\n");
 	double start_vect = now();
-	double res_vect = vect_norm1(array, N);
+	double res_vect = vect_norm1(array, args.N);
 	double end_vect = now();
 
 	printf("Running MT\n");
 	double start_mt = now();
-	double res_mt = multiThreaded(array, args.N, args.nb_threads);
+	double res_mt = multiThreaded(array, args.N, 0, args.nb_threads);
 	double end_mt = now();
 
 	printf("Running VECT + MT\n");
 	double start_vect_mt = now();
-	double res_vect_mt = multiThreaded(array, N, 1, 4);
+	double res_vect_mt = multiThreaded(array, args.N, 1, 4);
 	double end_vect_mt = now();
 
 	printf("Done!\n\n");
