@@ -29,7 +29,6 @@ float vect_norm1(float *U, int n){
     __m256 sign_bit = _mm256_set1_ps(-0.0f);
     for( i = 0; i <n/8; i++) {
         res = _mm256_add_ps(res,_mm256_sqrt_ps(_mm256_andnot_ps(sign_bit, mm_U[i])));
-        res = _mm256_add_ps(res,_mm256_sqrt_ps(mm_U[i]));
     }
     float resultat = 0;
     float *final = (float *) &res;
@@ -39,22 +38,6 @@ float vect_norm1(float *U, int n){
     return resultat;
 }
 
-float vect_norm2(float *U, int n){
-    unsigned int i;
-    __m256 *mm_U = (__m256 *)U;
-    __m256 res = _mm256_setzero_ps() ;
-    __m256 sign_bit = _mm256_set1_ps(-0.0f);
-    for( i = 0; i <n/8; i++) {
-        res = _mm256_add_ps(res,_mm256_sqrt_ps(_mm256_andnot_ps(sign_bit, mm_U[i])));
-        res = _mm256_add_ps(res,_mm256_sqrt_ps(mm_U[i]));
-    }
-    float resultat = 0;
-    float *final = (float *) &res;
-    for (int j =0; j < 8; j++) {
-        resultat += final[j];
-    };
-    return resultat;
-}
 
 int main(){
 	// init random
