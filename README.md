@@ -6,7 +6,7 @@ Calculer
 
 $$\sum_{i=0}^{N} \sqrt{abs(a_i)}$$ 
 
-le plus rapidement possible
+Le plus rapidement possible
 
 
 
